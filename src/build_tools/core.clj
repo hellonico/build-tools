@@ -20,7 +20,7 @@
 (defn uber-file[app-name]
   (format "target/%s-%s-jdk%s.jar" (str/lower-case app-name) version (System/getProperty "java.version")))
 
-(defn uberize [{:keys [app-name compile mainns] :as options}]
+(defn uberjar [{:keys [app-name compile mainns] :as options}]
   ;(clojure.pprint/pprint options)
 
   (clean nil)
@@ -34,6 +34,8 @@
            :basis     @basis
            :main      mainns
            }))
+(def uberize uberjar)
+
 (defn app-icon[{app-name :app-name}]
   (let[ os (System/getProperty "os.name")
         file-extension (if (or (.contains os "Mac") (= os "Mac OS X")) ".icns" ".png")
