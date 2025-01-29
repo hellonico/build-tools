@@ -51,14 +51,18 @@
     (str "resources/" (str/lower-case app-name) file-extension)))
 
 (defn jpackage [{app-name :app-name :as options}]
-  (shell/sh "jpackage"
-            "--dest" "output"
-            "--name" app-name
-            "--input" (.getParent (io/as-file (uber-file app-name)))
-            "--java-options" "-Xmx2048m"
-            "--main-jar" (.getName (io/as-file (uber-file app-name)))
-            "--icon" (app-icon options)
-            "--app-version" version))
+  (let [command
+        ["jpackage"
+        "--dest" "output"
+        "--name" app-name
+        "--input" (.getParent (io/as-file (uber-file app-name)))
+        "--java-options" "-Xmx2048m"
+        "--main-jar" (.getName (io/as-file (uber-file app-name)))
+        "--icon" (app-icon options)
+        "--app-version" (str/replace version ".no.git" "")]
+        ]
+    (println (str/join " " command))
+    (apply shell/sh command)))
 
 (defn build-all [options]
   (uberize options)
